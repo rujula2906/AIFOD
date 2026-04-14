@@ -3,385 +3,284 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI FOD Detection System - Project Infographic</title>
+    <title>AI FOD | Command Center PRO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .chart-container { 
-            position: relative; 
-            width: 100%; 
-            max-width: 600px; 
-            margin-left: auto; 
-            margin-right: auto; 
-            height: 350px; 
-            max-height: 400px; 
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        
+        @keyframes highlight-fade {
+            0% { background-color: #fef2f2; border-left: 6px solid #ef4444; }
+            100% { background-color: transparent; border-left: 6px solid #e2e8f0; }
         }
-        @media (max-width: 768px) {
-            .chart-container { height: 300px; }
-        }
-        .step-connector::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 100%;
-            width: 100%;
-            height: 4px;
-            background-color: #CBD5E1;
-            z-index: -1;
-            transform: translateY(-50%);
-        }
-        .step-card:last-child .step-connector::after {
-            display: none;
-        }
-    </style>
-    <!-- Chosen Palette: Energetic Blue & Cyan (Primary: #0284C7, Secondary: #06B6D4, Accent: #F97316, Dark: #0F172A) -->
-    <!-- Application Structure Plan: The app is structured as a vertical scrolling narrative. 1. Hero Section (Context). 2. Project Phases (Process Flow). 3. Data Insights (Interactive Dashboard). 4. Dataset Strategy (Information Cards). 5. Tech Stack (Grid Layout). This structure moves from the 'What' and 'How' to the 'Evidence' (Data) and 'Details' (Tech), facilitating logical understanding for stakeholders. -->
-    <!-- Visualization & Content Choices: 
-         1. Project Phases -> Goal: Organize -> CSS/Tailwind Process Steps -> Simple, clean flow without SVGs.
-         2. FOD Type Distribution -> Goal: Compare -> Chart.js Donut -> Shows composition of debris from mock data.
-         3. Environmental Impact -> Goal: Relationships -> Chart.js Stacked Bar -> Correlates detections with light/weather.
-         4. Dataset Cards -> Goal: Inform -> Styled HTML Cards -> Clear textual segmentation. 
-         5. Tech Stack -> Goal: Organize -> Grid Layout -> Visual grouping of technologies. 
-         Confirming NO SVG graphics used. NO Mermaid JS used. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-</head>
-<body class="bg-slate-50 text-slate-800">
+        .new-detection-flash { animation: highlight-fade 4s ease-out forwards; }
 
-    <!-- Navigation / Header -->
-    <header class="bg-gradient-to-r from-sky-700 to-cyan-600 text-white shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 class="text-xl md:text-2xl font-bold tracking-tight">✈️ AI FOD Detection System</h1>
-            <nav class="hidden md:flex space-x-6 text-sm font-semibold">
-                <a href="#roadmap" class="hover:text-sky-200 transition">Roadmap</a>
-                <a href="#data-analysis" class="hover:text-sky-200 transition">Data Analysis</a>
-                <a href="#datasets" class="hover:text-sky-200 transition">Datasets</a>
-                <a href="#tech-stack" class="hover:text-sky-200 transition">Tech Stack</a>
-            </nav>
+        .sector-active {
+            background-color: rgba(185, 28, 28, 0.7) !important;
+            border-color: #ef4444 !important;
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
+        }
+
+        .video-container { 
+            aspect-ratio: 16/9; 
+            background: #000; 
+            border-radius: 1.5rem; 
+            overflow: hidden; 
+            border: 4px solid #0f172a;
+            position: relative;
+        }
+        
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body class="text-slate-900">
+
+    <audio id="alert-sound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+
+    <header class="bg-slate-900 text-white shadow-2xl sticky top-0 z-50 border-b border-slate-700">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <span class="text-2xl">✈️</span>
+                <h1 class="text-xl font-black tracking-tighter uppercase italic">FOD <span class="text-sky-400">VISION</span> <span class="text-[10px] not-italic font-normal bg-slate-800 px-2 py-1 rounded ml-2 uppercase">Command Center</span></h1>
+            </div>
+            <div class="flex items-center space-x-6">
+                <div id="audio-status" class="flex items-center space-x-2 bg-slate-800 px-3 py-1 rounded-full border border-slate-700">
+                    <span id="audio-dot" class="w-2 h-2 bg-red-500 rounded-full"></span>
+                    <span id="audio-text" class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Audio Locked</span>
+                </div>
+                <div id="connection-status" class="flex items-center space-x-2">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Live Engine Linked</span>
+                </div>
+                <button id="reset-db" class="text-[10px] font-bold bg-slate-700 hover:bg-red-600 text-white px-4 py-2 rounded-full transition-all uppercase">
+                    Clear Master Log
+                </button>
+            </div>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="container mx-auto px-4 py-12 text-center">
-        <div class="max-w-4xl mx-auto">
-            <span class="inline-block py-1 px-3 rounded-full bg-orange-100 text-orange-600 text-xs font-bold uppercase mb-4 tracking-wide shadow-sm">Project Proposal Overview</span>
-            <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">Ensuring Runway Safety with <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-cyan-500">Computer Vision</span></h2>
-            <p class="text-lg text-slate-600 mb-8 leading-relaxed">
-                A proposal to develop a high-performance, real-time Foreign Object Debris (FOD) detection system. 
-                Running natively on macOS with Core ML, this system utilizes advanced deep learning to identify hazardous debris 
-                like bolts, tools, and organic material under varying environmental conditions.
-            </p>
-            <div class="flex flex-wrap justify-center gap-4">
-                <div class="bg-white p-4 rounded-xl shadow-md border-l-4 border-sky-500 w-full md:w-auto min-w-[200px]">
-                    <p class="text-3xl font-bold text-slate-800">99.9%</p>
-                    <p class="text-sm text-slate-500 font-medium">Target Accuracy</p>
-                </div>
-                <div class="bg-white p-4 rounded-xl shadow-md border-l-4 border-cyan-500 w-full md:w-auto min-w-[200px]">
-                    <p class="text-3xl font-bold text-slate-800">Real-Time</p>
-                    <p class="text-sm text-slate-500 font-medium">Core ML Inference</p>
-                </div>
-                <div class="bg-white p-4 rounded-xl shadow-md border-l-4 border-orange-500 w-full md:w-auto min-w-[200px]">
-                    <p class="text-3xl font-bold text-slate-800">24/7</p>
-                    <p class="text-sm text-slate-500 font-medium">All-Weather Ops</p>
+    <main class="container mx-auto px-6 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+            <div class="lg:col-span-8 bg-white p-4 rounded-3xl shadow-xl border border-slate-200">
+                <div class="video-container group">
+                    <img id="stream-img" src="http://localhost:5001/video_feed" class="w-full h-full object-cover transition-opacity duration-500" alt="Connecting to Camera Engine...">
+                    <div class="absolute bottom-6 left-6 z-50">
+                        <button id="toggle-btn" onclick="toggleSystem()" class="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-full font-black text-xs shadow-2xl flex items-center space-x-3 border-2 border-white/10 transition-all active:scale-95">
+                            <span id="btn-icon">⏹</span> <span id="btn-text">STOP SURVEILLANCE</span>
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- Project Roadmap Section -->
-    <section id="roadmap" class="bg-white py-16 shadow-inner">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
-                <h3 class="text-3xl font-bold text-slate-900">Project Execution Roadmap</h3>
-                <p class="text-slate-500 mt-2 max-w-2xl mx-auto">A five-phase strategy designed to move from data acquisition to full-scale deployment on airport tarmacs.</p>
-            </div>
-
-            <!-- Horizontal Step Process -->
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 relative">
-                <!-- Phase 1 -->
-                <div class="step-card relative p-6 bg-slate-50 rounded-lg border border-slate-200 hover:shadow-lg transition duration-300 md:text-center group">
-                    <div class="step-connector hidden md:block absolute top-0 left-0 w-full h-full pointer-events-none"></div>
-                    <div class="w-10 h-10 mx-auto bg-sky-600 text-white rounded-full flex items-center justify-center font-bold text-lg mb-4 shadow-md group-hover:scale-110 transition">1</div>
-                    <h4 class="font-bold text-slate-800 mb-2">Data & Training</h4>
-                    <p class="text-sm text-slate-600">Acquire diverse runway imagery and train YOLOv8 architecture.</p>
+            <div class="lg:col-span-4 flex flex-col space-y-6">
+                <div class="bg-white p-6 rounded-3xl shadow-xl border border-slate-200 flex-1 flex flex-col justify-center text-center">
+                    <h3 class="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-2 italic">Threats Identified</h3>
+                    <p id="total-fod-count" class="text-7xl font-black text-slate-900 leading-none">0</p>
                 </div>
                 
-                <!-- Phase 2 -->
-                <div class="step-card relative p-6 bg-slate-50 rounded-lg border border-slate-200 hover:shadow-lg transition duration-300 md:text-center group">
-                    <div class="step-connector hidden md:block absolute top-0 left-0 w-full h-full pointer-events-none"></div>
-                    <div class="w-10 h-10 mx-auto bg-cyan-600 text-white rounded-full flex items-center justify-center font-bold text-lg mb-4 shadow-md group-hover:scale-110 transition">2</div>
-                    <h4 class="font-bold text-slate-800 mb-2">Conversion</h4>
-                    <p class="text-sm text-slate-600">Convert PyTorch models to Core ML & quantize to FP16.</p>
-                </div>
-
-                <!-- Phase 3 -->
-                <div class="step-card relative p-6 bg-slate-50 rounded-lg border border-slate-200 hover:shadow-lg transition duration-300 md:text-center group">
-                    <div class="step-connector hidden md:block absolute top-0 left-0 w-full h-full pointer-events-none"></div>
-                    <div class="w-10 h-10 mx-auto bg-sky-500 text-white rounded-full flex items-center justify-center font-bold text-lg mb-4 shadow-md group-hover:scale-110 transition">3</div>
-                    <h4 class="font-bold text-slate-800 mb-2">App Dev</h4>
-                    <p class="text-sm text-slate-600">Build macOS Swift app with Vision Framework & Firestore.</p>
-                </div>
-
-                <!-- Phase 4 -->
-                <div class="step-card relative p-6 bg-slate-50 rounded-lg border border-slate-200 hover:shadow-lg transition duration-300 md:text-center group">
-                    <div class="step-connector hidden md:block absolute top-0 left-0 w-full h-full pointer-events-none"></div>
-                    <div class="w-10 h-10 mx-auto bg-cyan-500 text-white rounded-full flex items-center justify-center font-bold text-lg mb-4 shadow-md group-hover:scale-110 transition">4</div>
-                    <h4 class="font-bold text-slate-800 mb-2">Integration</h4>
-                    <p class="text-sm text-slate-600">Implement Geo-mapping and multi-user alert handling.</p>
-                </div>
-
-                <!-- Phase 5 -->
-                <div class="step-card relative p-6 bg-slate-50 rounded-lg border border-slate-200 hover:shadow-lg transition duration-300 md:text-center group">
-                    <div class="w-10 h-10 mx-auto bg-orange-500 text-white rounded-full flex items-center justify-center font-bold text-lg mb-4 shadow-md group-hover:scale-110 transition">5</div>
-                    <h4 class="font-bold text-slate-800 mb-2">Deployment</h4>
-                    <p class="text-sm text-slate-600">Stress testing, security audits, and field deployment.</p>
+                <div class="bg-slate-900 p-6 rounded-3xl shadow-xl border-4 border-slate-800 flex-1">
+                    <h3 class="text-white text-[10px] font-bold uppercase mb-6 tracking-widest flex items-center">
+                        <span class="w-2 h-2 bg-sky-500 rounded-full mr-2"></span> Spatial Runway Map
+                    </h3>
+                    <div class="grid grid-cols-1 gap-3">
+                        <div id="map-sector-a" class="h-14 border-2 border-slate-700 rounded-2xl flex items-center justify-center transition-all duration-300">
+                            <span class="text-[10px] font-black text-slate-600 tracking-widest uppercase">Sector Alpha</span>
+                        </div>
+                        <div id="map-sector-b" class="h-14 border-2 border-slate-700 rounded-2xl flex items-center justify-center transition-all duration-300">
+                            <span class="text-[10px] font-black text-slate-600 tracking-widest uppercase">Sector Bravo</span>
+                        </div>
+                        <div id="map-sector-c" class="h-14 border-2 border-slate-700 rounded-2xl flex items-center justify-center transition-all duration-300">
+                            <span class="text-[10px] font-black text-slate-600 tracking-widest uppercase">Sector Charlie</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- Data Analysis Section -->
-    <section id="data-analysis" class="container mx-auto px-4 py-16">
-        <div class="mb-10">
-            <h3 class="text-3xl font-bold text-slate-900 border-l-8 border-sky-600 pl-4">Initial Data Analysis</h3>
-            <p class="mt-4 text-slate-600 text-lg">
-                The effectiveness of the AI depends on the diversity of the training data. 
-                Below is an analysis of the preliminary 26-frame mock dataset (`primary_training_data_mock.csv`), highlighting the distribution of object classes and environmental variables the system must handle.
-            </p>
+        <div class="bg-white p-8 rounded-3xl shadow-xl border border-slate-200 mb-8">
+            <h3 class="text-slate-800 font-bold uppercase text-[10px] tracking-widest mb-6 flex items-center">Detection Frequency Over Time</h3>
+            <div style="height: 250px;"><canvas id="liveFodChart"></canvas></div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Chart 1: Debris Type Distribution -->
-            <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-100">
-                <h4 class="text-xl font-bold text-slate-800 mb-2">Detected Debris Composition</h4>
-                <p class="text-sm text-slate-500 mb-6">Breakdown of FOD types identified in the training set. Understanding the prevalence of specific debris (like bolts or plastic) helps prioritize training data collection.</p>
-                
-                <div class="chart-container">
-                    <canvas id="debrisChart"></canvas>
-                </div>
-                <div class="mt-4 text-center">
-                    <span class="inline-block bg-sky-50 text-sky-700 text-xs px-2 py-1 rounded border border-sky-100">Total Samples: 26</span>
-                </div>
+        <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
+            <div class="px-8 py-5 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+                <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-500">Security Event Log</h3>
+                <span class="text-[9px] bg-sky-100 text-sky-700 px-3 py-1 rounded font-black">SYNCED</span>
             </div>
-
-            <!-- Chart 2: Environmental Conditions -->
-            <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-100">
-                <h4 class="text-xl font-bold text-slate-800 mb-2">Environmental Robustness</h4>
-                <p class="text-sm text-slate-500 mb-6">Distribution of training data across different lighting and weather conditions. High variance here is critical to prevent model failure during rain or low light.</p>
-                
-                <div class="chart-container">
-                    <canvas id="environmentChart"></canvas>
-                </div>
-                <div class="mt-4 flex flex-wrap gap-2 justify-center">
-                    <button class="bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs px-3 py-1 rounded transition" onclick="updateEnvChart('all')">All Data</button>
-                    <button class="bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs px-3 py-1 rounded transition" onclick="updateEnvChart('rain')">Rain Only</button>
-                </div>
+            <div class="overflow-x-auto custom-scroll max-h-96">
+                <table class="w-full text-left border-collapse">
+                    <thead class="sticky top-0 bg-white shadow-sm z-10">
+                        <tr class="text-[10px] font-black text-slate-400 uppercase border-b border-slate-100">
+                            <th class="px-8 py-4">Logged Time</th>
+                            <th class="px-8 py-4">Threat Type</th>
+                            <th class="px-8 py-4">Zone</th>
+                            <th class="px-8 py-4">Confidence</th>
+                            <th class="px-8 py-4">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="master-log-body" class="text-xs font-semibold text-slate-600 divide-y divide-slate-50"></tbody>
+                </table>
             </div>
         </div>
-    </section>
+    </main>
 
-    <!-- Datasets Strategy Section -->
-    <section id="datasets" class="bg-slate-900 text-white py-16">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
-                <h3 class="text-3xl font-bold">Strategic Data Organization</h3>
-                <p class="text-slate-400 mt-2">To ensure safety-critical reliability, data is segregated into three distinct tiers.</p>
-            </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, limit, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- T&V Card -->
-                <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700 hover:border-sky-500 transition duration-300">
-                    <div class="text-4xl mb-4">🏋️</div>
-                    <h4 class="text-xl font-bold text-sky-400 mb-3">1. Primary T&V</h4>
-                    <p class="text-slate-300 text-sm leading-relaxed mb-4">
-                        **Training & Validation.** The core dataset used to teach the model.
-                    </p>
-                    <ul class="text-slate-400 text-xs space-y-2 list-disc pl-4">
-                        <li>High-res runway images (1024x1024)</li>
-                        <li>Classes: Bolts, tools, birds, plastic</li>
-                        <li>Backgrounds: Tire marks, seams, oil</li>
-                        <li>Split: 80% Train / 20% Val</li>
-                    </ul>
-                </div>
-
-                <!-- A-Set Card -->
-                <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700 hover:border-cyan-500 transition duration-300">
-                    <div class="text-4xl mb-4">🛡️</div>
-                    <h4 class="text-xl font-bold text-cyan-400 mb-3">2. Edge Case (A-Set)</h4>
-                    <p class="text-slate-300 text-sm leading-relaxed mb-4">
-                        **Adversarial & Hard Cases.** Used to fine-tune and harden the model.
-                    </p>
-                    <ul class="text-slate-400 text-xs space-y-2 list-disc pl-4">
-                        <li>Occlusion: Partially hidden debris</li>
-                        <li>Low Contrast: Black rubber on asphalt</li>
-                        <li>Motion Blur: Windy conditions</li>
-                        <li>Extreme scale variations</li>
-                    </ul>
-                </div>
-
-                <!-- RWS Card -->
-                <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700 hover:border-orange-500 transition duration-300">
-                    <div class="text-4xl mb-4">🎬</div>
-                    <h4 class="text-xl font-bold text-orange-400 mb-3">3. Simulation (RWS)</h4>
-                    <p class="text-slate-300 text-sm leading-relaxed mb-4">
-                        **Real-World Simulation.** Strictly for final deployment testing.
-                    </p>
-                    <ul class="text-slate-400 text-xs space-y-2 list-disc pl-4">
-                        <li>Calculates False Positive Rate (FPR)</li>
-                        <li>Calculates False Negative Rate (FNR)</li>
-                        <li>Controlled FOD drops</li>
-                        <li>Mimics exact live stream latency</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Technology Stack -->
-    <section id="tech-stack" class="container mx-auto px-4 py-16">
-        <h3 class="text-3xl font-bold text-slate-900 mb-8 text-center">Core Technology Stack</h3>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div class="flex flex-col items-center p-6 bg-orange-50 rounded-xl border border-orange-100">
-                <span class="text-3xl font-bold text-orange-600 mb-2">PyTorch</span>
-                <span class="text-sm text-slate-600 font-medium">Model Training</span>
-            </div>
-            <div class="flex flex-col items-center p-6 bg-sky-50 rounded-xl border border-sky-100">
-                <span class="text-3xl font-bold text-sky-600 mb-2">Core ML</span>
-                <span class="text-sm text-slate-600 font-medium">On-Device Inference</span>
-            </div>
-            <div class="flex flex-col items-center p-6 bg-cyan-50 rounded-xl border border-cyan-100">
-                <span class="text-3xl font-bold text-cyan-600 mb-2">SwiftUI</span>
-                <span class="text-sm text-slate-600 font-medium">Native macOS App</span>
-            </div>
-            <div class="flex flex-col items-center p-6 bg-yellow-50 rounded-xl border border-yellow-100">
-                <span class="text-3xl font-bold text-yellow-600 mb-2">Firebase</span>
-                <span class="text-sm text-slate-600 font-medium">Cloud Persistence</span>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-400 py-8 text-center text-sm">
-        <div class="container mx-auto">
-            <p>&copy;  AI FOD Detection Project Overview</p>
-        </div>
-    </footer>
-
-    <!-- Script for Charts and Interaction -->
-    <script>
-        // --- Data Source: primary_training_data_mock.csv (Aggregated) ---
-        // Based on the provided 26 rows of mock data.
-        const fodData = [
-            { class: 'metal_bolt', count: 4, light: 'Daytime', weather: 'Clear' },
-            { class: 'washer', count: 3, light: 'Daytime', weather: 'Clear' },
-            { class: 'plastic_bottle', count: 4, light: 'Dusk', weather: 'Overcast' },
-            { class: 'organic_material', count: 3, light: 'Daytime', weather: 'Rain' },
-            { class: 'tool_fragment', count: 3, light: 'Night', weather: 'Clear' },
-            { class: 'nut', count: 3, light: 'Dawn', weather: 'Fog' },
-            { class: 'paper_debris', count: 6, light: 'Daytime', weather: 'Clear' }
-        ];
-
-        // Aggregation for Chart 1 (Debris Types)
-        const labels = ['Metal Bolt', 'Washer', 'Plastic Bottle', 'Organic Material', 'Tool Fragment', 'Nut', 'Paper Debris'];
-        // Counts derived manually from the CSV rows in context
-        const dataCounts = [4, 3, 4, 3, 3, 4, 5]; 
-
-        // Aggregation for Chart 2 (Environment)
-        // Data format: [Daytime, Dusk, Night, Dawn]
-        const clearData = [3, 1, 2, 1]; // Count of 'Clear' weather across times
-        const rainData = [1, 1, 1, 0];  // Count of 'Rain'
-        const overcastData = [1, 2, 1, 0]; // Count of 'Overcast'
-        const fogData = [0, 0, 1, 2]; // Count of 'Fog'
-        
-        const timeLabels = ['Daytime', 'Dusk', 'Night', 'Dawn'];
-
-        // --- Common Chart Options ---
-        const commonOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } },
-                tooltip: {
-                    backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                    padding: 12,
-                    callbacks: {
-                        title: function(tooltipItems) {
-                            const item = tooltipItems[0];
-                            let label = item.chart.data.labels[item.dataIndex];
-                            if (Array.isArray(label)) return label.join(' ');
-                            return label;
-                        }
-                    }
-                }
-            }
+        const firebaseConfig = {
+            apiKey: "AIzaSyA-0IuHdbOTVBK91SvreYJW_cPfhM3v9ks",
+            authDomain: "fod-35c19.firebaseapp.com",
+            projectId: "fod-35c19",
+            storageBucket: "fod-35c19.firebasestorage.app",
+            messagingSenderId: "715718274224",
+            appId: "1:715718274224:web:ecc75e6d325d4a36a4df75"
         };
 
-        // --- Chart 1: Debris Distribution (Donut) ---
-        const ctxDebris = document.getElementById('debrisChart').getContext('2d');
-        new Chart(ctxDebris, {
-            type: 'doughnut',
-            data: {
-                labels: labels, // Labels are short, no wrapping needed
-                datasets: [{
-                    data: dataCounts,
-                    backgroundColor: [
-                        '#0284C7', // Sky 600
-                        '#38BDF8', // Sky 400
-                        '#06B6D4', // Cyan 500
-                        '#22D3EE', // Cyan 400
-                        '#F97316', // Orange 500
-                        '#FB923C', // Orange 400
-                        '#94A3B8'  // Slate 400
-                    ],
-                    borderWidth: 0,
-                    hoverOffset: 4
-                }]
-            },
-            options: {
-                ...commonOptions,
-                cutout: '65%'
-            }
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const alertsRef = collection(db, "fod_alerts");
+        let knownIds = new Set();
+        let audioEnabled = false;
+
+        // --- NEW: Global Audio Unlocker ---
+        // This ensures the sound plays even if they don't click the "Start" button specifically.
+        const unlockAudio = () => {
+            if (audioEnabled) return;
+            const audio = document.getElementById('alert-sound');
+            audio.play().then(() => {
+                audio.pause();
+                audio.currentTime = 0;
+                audioEnabled = true;
+                document.getElementById('audio-dot').classList.replace('bg-red-500', 'bg-green-500');
+                document.getElementById('audio-text').innerText = "Audio Armed";
+                console.log("🔊 Audio System Initialized");
+            }).catch(e => console.log("Waiting for interaction..."));
+        };
+
+        document.body.addEventListener('click', unlockAudio, { once: true });
+
+        // Chart Setup
+        const ctx = document.getElementById('liveFodChart').getContext('2d');
+        const liveFodChart = new Chart(ctx, {
+            type: 'line',
+            data: { labels: [], datasets: [{ label: 'Detections', data: [], borderColor: '#0ea5e9', backgroundColor: 'rgba(14, 165, 233, 0.05)', fill: true, tension: 0.4, borderWidth: 3 }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
         });
 
-        // --- Chart 2: Environment Stacked Bar ---
-        const ctxEnv = document.getElementById('environmentChart').getContext('2d');
-        const envChart = new Chart(ctxEnv, {
-            type: 'bar',
-            data: {
-                labels: timeLabels,
-                datasets: [
-                    { label: 'Clear', data: clearData, backgroundColor: '#0284C7', stack: 'Stack 0' },
-                    { label: 'Overcast', data: overcastData, backgroundColor: '#94A3B8', stack: 'Stack 0' },
-                    { label: 'Rain', data: rainData, backgroundColor: '#06B6D4', stack: 'Stack 0' },
-                    { label: 'Fog', data: fogData, backgroundColor: '#F97316', stack: 'Stack 0' }
-                ]
-            },
-            options: {
-                ...commonOptions,
-                scales: {
-                    x: { stacked: true, grid: { display: false } },
-                    y: { stacked: true, beginAtZero: true, grid: { color: '#E2E8F0' } }
+        // 1. Toggle System
+        window.toggleSystem = async () => {
+            unlockAudio(); // Also unlock here just in case
+            try {
+                const res = await fetch('http://localhost:5001/toggle_stream', { method: 'POST' });
+                const data = await res.json();
+                const btnText = document.getElementById('btn-text');
+                const btnIcon = document.getElementById('btn-icon');
+                const btn = document.getElementById('toggle-btn');
+                const img = document.getElementById('stream-img');
+
+                if (data.active) {
+                    btnText.innerText = "STOP SURVEILLANCE";
+                    btnIcon.innerText = "⏹";
+                    btn.classList.replace('bg-green-600', 'bg-red-600');
+                    img.style.opacity = "1";
+                } else {
+                    btnText.innerText = "START SURVEILLANCE";
+                    btnIcon.innerText = "▶";
+                    btn.classList.replace('bg-red-600', 'bg-green-600');
+                    img.style.opacity = "0.3";
                 }
-            }
+            } catch (e) { alert("Engine connection failed."); }
+        };
+
+        // 2. FIREBASE SYNC (Map Glow + Alarm + Table)
+        // Using snapshot.docChanges() is the most reliable way to catch "New" events
+        onSnapshot(query(alertsRef, orderBy("timestamp", "desc"), limit(20)), (snapshot) => {
+            const table = document.getElementById('master-log-body');
+            const audio = document.getElementById('alert-sound');
+            const totalCountEl = document.getElementById('total-fod-count');
+            
+            totalCountEl.innerText = snapshot.size;
+
+            // Clear Map State
+            ['a', 'b', 'c'].forEach(s => {
+                const el = document.getElementById(`map-sector-${s}`);
+                if (el) {
+                    el.classList.remove('sector-active');
+                    el.querySelector('span').classList.replace('text-white', 'text-slate-600');
+                }
+            });
+
+            // Handle New Detections for Alarm
+            snapshot.docChanges().forEach((change) => {
+                if (change.type === "added") {
+                    const docId = change.doc.id;
+                    // knownIds.size > 0 prevents the alarm from screaming for old logs on page refresh
+                    if (knownIds.size > 0 && !knownIds.has(docId)) {
+                        console.log("🔔 New Alert Triggered!");
+                        if (audioEnabled) {
+                            audio.currentTime = 0;
+                            audio.play().catch(e => console.error("Playback error:", e));
+                        }
+                    }
+                    knownIds.add(docId);
+                }
+            });
+
+            table.innerHTML = '';
+            let history = {};
+
+            snapshot.forEach((doc) => {
+                const d = doc.data();
+                
+                // Map Glow Logic
+                if (d.sector) {
+                    const sectorID = `map-sector-${d.sector.toLowerCase().split(' ').pop()}`;
+                    const sectorEl = document.getElementById(sectorID);
+                    if (sectorEl) {
+                        sectorEl.classList.add('sector-active');
+                        sectorEl.querySelector('span').classList.replace('text-slate-600', 'text-white');
+                    }
+                }
+
+                // Table Update
+                const time = d.timestamp ? d.timestamp.toDate().toLocaleTimeString() : 'Syncing...';
+                const isNewEntry = knownIds.has(doc.id) && snapshot.docChanges().some(c => c.doc.id === doc.id && c.type === "added" && knownIds.size > 20);
+
+                table.insertAdjacentHTML('beforeend', `
+                    <tr class="${isNewEntry ? 'new-detection-flash' : ''} hover:bg-slate-50 transition-colors">
+                        <td class="px-8 py-4 font-mono text-slate-400 font-bold">${time}</td>
+                        <td class="px-8 py-4"><span class="bg-red-100 text-red-700 px-3 py-1 rounded text-[10px] font-black uppercase tracking-tighter">Foreign Object</span></td>
+                        <td class="px-8 py-4 uppercase font-black text-slate-900">${d.sector || 'N/A'}</td>
+                        <td class="px-8 py-4 font-bold text-sky-600">${(d.confidence * 100).toFixed(1)}%</td>
+                        <td class="px-8 py-4 flex items-center"><span class="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></span> Unresolved</td>
+                    </tr>
+                `);
+
+                if (d.timestamp) {
+                    const t = d.timestamp.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    history[t] = (history[t] || 0) + 1;
+                }
+            });
+
+            // Update Chart
+            liveFodChart.data.labels = Object.keys(history).slice(-12);
+            liveFodChart.data.datasets[0].data = Object.values(history).slice(-12);
+            liveFodChart.update();
         });
 
-        // --- Interaction Logic ---
-        function updateEnvChart(filter) {
-            if (filter === 'all') {
-                envChart.data.datasets[0].hidden = false;
-                envChart.data.datasets[1].hidden = false;
-                envChart.data.datasets[2].hidden = false;
-                envChart.data.datasets[3].hidden = false;
-            } else if (filter === 'rain') {
-                envChart.data.datasets[0].hidden = true;
-                envChart.data.datasets[1].hidden = true;
-                envChart.data.datasets[2].hidden = false;
-                envChart.data.datasets[3].hidden = true;
+        // System Reset
+        document.getElementById('reset-db').addEventListener('click', async () => {
+            if (confirm("Wipe all logs?")) {
+                const snap = await getDocs(alertsRef);
+                const batch = writeBatch(db);
+                snap.forEach(d => batch.delete(d.ref));
+                await batch.commit();
+                knownIds.clear();
             }
-            envChart.update();
-        }
-
+        });
     </script>
 </body>
 </html>
